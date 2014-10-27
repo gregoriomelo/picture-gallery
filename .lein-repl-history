@@ -1,9 +1,0 @@
-exit
-(start-server)
-exit
-(start-server)
-exit
-(use 'picture-gallery.models.schema)
-(use 'picture-gallery)
-(use 'picture-gallery.repl)
-(create-users-table)
