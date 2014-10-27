@@ -19,21 +19,24 @@
 (defn error-item [[error]]
   [:div.error error])
 
+(defn control [id field label]
+  (list
+    (validation/on-error id error-item)
+    label field
+    [:br]))
+
 (defn registration-page [& [id]]
   (layout/common
     (form-to [:post "/register"]
-             (validation/on-error :id error-item)
-             (label "user-id" "user id")
-             (text-field {:tab-index 1} "id" id)
-             [:br]
-             (validation/on-error :pass error-item)
-             (label "pass" "password")
-             (password-field {:tab-index 2} "pass")
-             [:br]
-             (validation/on-error :pass1 error-item)
-             (label "pass1" "retype password")
-             (password-field {:tab-index 3} "pass1")
-             [:br]
+             (control :id
+                      (label "user-id" "user id")
+                      (text-field {:tab-index 1} "id" id))
+             (control :pass
+                      (label "pass" "password")
+                      (password-field {:tab-index 2} "pass"))
+             (control :pass1
+                      (label "pass1" "retype password")
+                      (password-field {:tab-index 3} "pass1"))
              (submit-button {:tab-index 4} "create account"))))
 
 (defn handle-registration [id pass pass1]
