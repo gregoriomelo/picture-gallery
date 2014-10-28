@@ -5,7 +5,17 @@
             [picture-gallery.views.layout :as layout]
             [noir.session :as session]
             [noir.response :as resp]
-            [noir.validation :as validation]))
+            [noir.validation :as validation]
+            [noir.util.crypt :as crypt]
+            [picture-gallery.models.db :as db]))
+
+(defn format-error [id ex]
+  (cond
+    (and (instance? org.postgresql.util.PSQLException ex)
+         (= 0 (.getErrorCode ex)))
+    (str "The user with id " id " already exists!")
+    :else
+    "An error has occured while processing the request"))
 
 (defn valid? [id pass pass1]
   (validation/rule (validation/has-value? id)
@@ -41,8 +51,13 @@
 
 (defn handle-registration [id pass pass1]
   (if (valid? id pass pass1)
-    (do (session/put! :user id)
-        (resp/redirect "/"))
+    (try
+      (db/create-user {:id id :pass (crypt/encrypt pass)})
+      (session/put! :user id)
+      (resp/redirect "/")
+      (catch Exception ex
+        (validation/rule false [:id (format-error id ex)])
+        (registration-page)))
     (registration-page id)))
 
 (defroutes auth-routes
