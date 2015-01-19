@@ -53,10 +53,10 @@
     (form-to {:enctype "multipart/form-data"}
              [:post "/upload"]
              (file-upload :file)
-             (submit-button "upload"))))
+             (submit-button "upload")))
+  (resp/redirect "/"))
 
 (defn handle-upload [{:keys [filename] :as file}]
-  (println file)
   (upload-page
     (if (empty? filename)
       "please select a file to upload"
@@ -73,6 +73,6 @@
   (file-response (str galleries File/separator user-id File/separator file-name)))
 
 (defroutes upload-routes
-  (GET "/upload" [info] (upload-page info))
-  (POST "/upload" [file] (handle-upload file))
+  (GET "/upload" [info] (restricted (upload-page info)))
+  (POST "/upload" [file] (restricted (handle-upload file)))
   (GET "/img/:user-id/:file-name" [user-id file-name] (serve-file user-id file-name)))
