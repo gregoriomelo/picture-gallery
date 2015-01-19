@@ -10,7 +10,8 @@
             [noir.util.route :refer [restricted]]
             [clojure.java.io :as io]
             [ring.util.response :refer [file-response]]
-            [picture-gallery.models.db :as db])
+            [picture-gallery.models.db :as db]
+            [picture-gallery.util :refer :all])
   (:import [java.io File FileInputStream FileOutputStream]
            [java.awt.image AffineTransformOp BufferedImage]
            java.awt.RenderingHints
@@ -18,12 +19,6 @@
            javax.imageio.ImageIO))
 
 (def thumb-size 150)
-(def thumb-prefix "thumb_")
-
-(def galleries "galleries")
-
-(defn gallery-path []
-  (str galleries File/separator (session/get :user)))
 
 (defn scale [img ratio width height]
   (let [scale (AffineTransform/getScaleInstance
@@ -60,16 +55,15 @@
     (if (empty? filename)
       "please select a file to upload"
       (try
-        (noir.io/upload-file (gallery-path) file :create-path? true)
+        (upload-file (gallery-path) file)
         (save-thumbnail file)
         (db/add-image (session/get :user) filename)
         (image {:height "150px"}
-          (str "/img/" (session/get :user) File/separator filename))
+          (thumb-uri (session/get :user) filename))
         (catch Exception ex
           (str "Error uploading file " (.getMessage ex)))))))
 
 (defn serve-file [user-id file-name]
-  (print (str galleries File/separator user-id File/separator file-name))
   (file-response (str galleries File/separator user-id File/separator file-name)))
 
 (defroutes upload-routes

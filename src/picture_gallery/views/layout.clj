@@ -11,13 +11,21 @@
      (include-css "/css/screen.css")]
     [:body content]))
 
+(defn user-menu [user]
+  (list
+    [:div (link-to "/upload" "upload images")]
+    [:div (link-to "/logout" (str "logout " user))]))
+
+(defn guest-menu []
+  [:div (link-to "/register" "register")
+   (form-to [:post "/login"]
+            (text-field {:placeholder "screen name"} "id")
+            (password-field {:password "password"} "pass")
+            (submit-button "login"))])
+
 (defn common [& content]
   (base
     (if-let [user (session/get :user)]
-      [:dev (link-to "/logout" (str "logout " user))]
-      [:dev (link-to "/register" "register")
-       (form-to [:post "/login"]
-                (text-field {:placeholder "screen name"} "id")
-                (password-field {:password "password"} "pass")
-                (submit-button "login"))])
+      (user-menu user)
+      (guest-menu))
     content))
