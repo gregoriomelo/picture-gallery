@@ -11,3 +11,5 @@ pom.xml
 .lein-env
 .nrepl-port
 .lein-repl-history
+*.un~
+/galleries
