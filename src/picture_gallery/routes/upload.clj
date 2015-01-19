@@ -53,8 +53,7 @@
     (form-to {:enctype "multipart/form-data"}
              [:post "/upload"]
              (file-upload :file)
-             (submit-button "upload")))
-  (resp/redirect "/"))
+             (submit-button "upload"))))
 
 (defn handle-upload [{:keys [filename] :as file}]
   (upload-page
@@ -63,6 +62,7 @@
       (try
         (noir.io/upload-file (gallery-path) file :create-path? true)
         (save-thumbnail file)
+        (db/add-image (session/get :user) filename)
         (image {:height "150px"}
           (str "/img/" (session/get :user) File/separator filename))
         (catch Exception ex

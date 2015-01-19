@@ -2,6 +2,13 @@
   (:require [picture-gallery.models.db :refer :all]
             [clojure.java.jdbc :as sql]))
 
+(defn create-images-table []
+  (sql/with-connection db
+    (sql/create-table
+      :images
+      [:userid "varchar(32)"]
+      [:name "varchar(100)"])))
+
 (defn create-users-table []
   (sql/with-connection db
     (sql/create-table
