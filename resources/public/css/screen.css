@@ -9,6 +9,18 @@ h1 {
     text-align: center;
 }
 
+.thumbnail {
+    float:left;
+    padding: 5px;
+    margin: 8px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#ccc;
+    box-shadow:         4px 4px 6px -1px #222;        
+    -moz-box-shadow:    4px 4px 6px -1px #222;
+    -webkit-box-shadow: 4px 4px 6px -1px #222;    
+}
+
 label {
     width:150px;
     float:left;

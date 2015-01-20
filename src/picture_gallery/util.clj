@@ -10,7 +10,7 @@
 (defn gallery-path []
   (str galleries File/separator (session/get :user)))
 
-(defn image-uri [userid file-name]
+(defn image-uri [userid filename]
   (str "/img/" userid "/" (url-encode filename)))
 
 (defn thumb-uri [userid file-name]
