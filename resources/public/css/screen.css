@@ -29,3 +29,13 @@ label {
 .error {
     color: red;
 }
+
+.menuitem {
+    float: left;
+    margin-right: 10px;
+}
+
+.content {
+    clear: both; 
+    padding: 20px;
+}
